@@ -8,7 +8,7 @@ model:
     embed_dim: 16
     ckpt_path: files/vae.safetensors
     scaling_factor: 1.5305
-    shift_factor: 0
+    shift_factor: 0.0
     trainable_ae_params: null
     use_fp16: false
 
