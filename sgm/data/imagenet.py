@@ -6,6 +6,7 @@ from omegaconf import DictConfig
 from torch.utils.data import DataLoader, Dataset
 from torchvision import transforms
 from torchvision.datasets import ImageFolder
+import pillow_jxl
 
 
 class ImageNetDataset(Dataset):
@@ -13,7 +14,16 @@ class ImageNetDataset(Dataset):
         self.root_dir = root_dir
         self.split = split
         self.transform = transform
-        self.dataset = ImageFolder(os.path.join(root_dir, split), transform=self.transform)
+        extensions = (
+            '.jpg', '.jpeg', '.png', '.ppm', '.bmp', '.pgm', 
+            '.tif', '.tiff', '.webp', '.jxl'
+        )
+        
+        self.dataset = ImageFolder(
+            os.path.join(root_dir, split), 
+            transform=self.transform,
+            extensions=extensions
+        )
 
     def __len__(self):
         return len(self.dataset)
@@ -63,7 +73,7 @@ class ImageNetLoader(pl.LightningDataModule):
                 root_dir=validation.root_dir, split="val", transform=transform
             )
         else:
-            print("Warning: No Validation Datasetdefined, using that one from training")
+            print("Warning: No Validation Dataset defined, using that one from training")
             self.test_dataset = self.train_dataset
 
     def prepare_data(self):
